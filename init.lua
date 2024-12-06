@@ -667,12 +667,32 @@ require('lazy').setup({
         -- ts_ls = {},
         --
         volar = {
-          filetypes = { 'typescript', 'javascript', 'vue', 'json' }, -- Включаем файлы .vue, .ts, .js
+          filetypes = { 'typescript', 'javascript', 'vue', 'json', 'js' }, -- Включаем файлы .vue, .ts, .js
           init_options = {
             vue = {
               hybridMode = false,
             },
           },
+          capabilities = capabilities,
+          on_attach = function(client, bufnr)
+            local bufopts = { noremap = true, silent = true, buffer = bufnr }
+
+            -- Упорядочить импорты
+            vim.keymap.set('n', '<leader>oi', vim.lsp.buf.code_action, bufopts)
+
+            -- Автодобавление недостающих импортов
+            vim.keymap.set('n', '<leader>ai', function()
+              vim.lsp.buf.execute_command {
+                command = '_typescript.addMissingImports',
+                arguments = { vim.api.nvim_buf_get_name(0) },
+              }
+            end, bufopts)
+
+            -- Переименование с обновлением путей
+            vim.keymap.set('n', '<leader>ru', function()
+              vim.lsp.buf.rename()
+            end, bufopts)
+          end,
         },
 
         lua_ls = {
@@ -761,10 +781,18 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'eslint_d', 'prettier' },
+        vue = { 'eslint_d', 'prettier' },
+        typescript = { 'eslint_d', 'prettier' },
+        json = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'stylelint' },
+        scss = { 'stylelint' },
+        less = { 'stylelint' },
+        postcss = { 'stylelint' },
       },
     },
   },
