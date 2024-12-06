@@ -1,18 +1,27 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
 return {
+  -- иконки
   {
     'nvim-tree/nvim-web-devicons',
     lazy = true, -- Плагин будет загружаться только при необходимости
   },
+  -- файловое дерево
   {
     'nvim-tree/nvim-tree.lua',
     config = function()
-      require('nvim-tree').setup()
+      require('nvim-tree').setup {
+        actions = {
+          open_file = {
+            quit_on_open = true,
+          },
+        },
+        renderer = {
+          highlight_opened_files = 'all',
+        },
+      }
     end,
+    vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file tree' }),
   },
+  -- Плагин для управления буферами
   {
     'akinsho/bufferline.nvim',
     version = '*', -- Убедитесь, что установлена последняя версия
@@ -31,6 +40,7 @@ return {
       }
     end,
   },
+  -- плагин для управления вкладками
   {
     'nvim-treesitter/nvim-treesitter-context',
     dependencies = { 'nvim-treesitter/nvim-treesitter' }, -- Убедитесь, что Treesitter установлен
@@ -48,6 +58,44 @@ return {
         zindex = 20, -- Z-index окна
         on_attach = nil, -- Опциональная функция для управления прикреплением
       }
+    end,
+  },
+  -- сохраняет версии файлов
+  {
+    'mbbill/undotree',
+    vim.keymap.set('n', '<C-U>', vim.cmd.UndotreeToggle, { noremap = true, silent = true }),
+  },
+  {
+    'github/copilot.vim',
+  },
+  -- автозакрывание тега
+  {
+    'windwp/nvim-ts-autotag',
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end,
+  },
+  -- множетсво терминалов
+  {
+    'akinsho/nvim-toggleterm.lua',
+    config = function()
+      require('toggleterm').setup {
+        size = 15,
+        open_mapping = [[<C-\>]],
+        hide_numbers = false,
+        start_in_insert = true,
+        persist_size = true,
+        direction = 'horizontal',
+        close_on_exit = true,
+        shell = 'zsh',
+      }
+    end,
+  },
+  -- множетсвенный курсор
+  {
+    'mg979/vim-visual-multi',
+    config = function()
+      vim.g.VM_maps = 0
     end,
   },
 }
