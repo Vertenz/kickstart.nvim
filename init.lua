@@ -187,6 +187,9 @@ vim.g.coc_global_extensions = { 'coc-spell-checker' }
 -- See `:help 'confirm'`
 vim.opt.confirm = true
 
+-- slellcheck
+vim.opt.spell = true
+vim.opt.spelllang = { 'en', 'en_us', 'ru', 'ru_ru' }
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
