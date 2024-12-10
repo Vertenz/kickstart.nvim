@@ -102,7 +102,19 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+  pattern = '*',
+  callback = function()
+    vim.opt.relativenumber = false
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+  pattern = '*',
+  callback = function()
+    vim.opt.relativenumber = true
+  end,
+})
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -157,6 +169,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- slellcheck
+vim.opt.spell = true
+vim.opt.spelllang = { 'en', 'en_us', 'ru', 'ru_ru' }
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -747,7 +762,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'eslint_d', 'prettier' },
-        vue = { 'eslint_d', 'prettier' },
+        vue = { 'eslint_d', 'stylelint' },
         typescript = { 'eslint_d', 'prettier' },
         json = { 'prettier' },
         html = { 'prettier' },
@@ -939,7 +954,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'vue', 'scss' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
