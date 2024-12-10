@@ -1,9 +1,4 @@
 return {
-  -- иконки
-  {
-    'nvim-tree/nvim-web-devicons',
-    lazy = true, -- Плагин будет загружаться только при необходимости
-  },
   -- файловое дерево
   {
     'nvim-tree/nvim-tree.lua',
@@ -39,6 +34,10 @@ return {
         },
       }
     end,
+    vim.keymap.set('n', 'tn', '<cmd>BufferLineCycleNext<CR>', { desc = 'Next buffer' }),
+    vim.keymap.set('n', 'tp', '<cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' }),
+    vim.keymap.set('n', 'tc', '<cmd>bd<CR>', { desc = 'Close current' }),
+    vim.keymap.set('n', '<leader>tc', '<cmd>BufferLineCloseOthers<CR>', { desc = 'Close other' }),
   },
   -- плагин для управления вкладками
   {
