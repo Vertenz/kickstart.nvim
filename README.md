@@ -82,8 +82,9 @@ git clone https://github.com/Vertenz/kickstart.nvim.git "${env:LOCALAPPDATA}\nvi
 + [folke/tokyonight.nvim](https://dotfyle.com/plugins/folke/tokyonight.nvim)
 ### comment
 
-+ [folke/todo-comments.nvim](https://dotfyle.com/plugins/folke/todo-comments.nvim)
-### completion
+## Plugins
+
+### colorscheme
 
 + [hrsh7th/nvim-cmp](https://dotfyle.com/plugins/hrsh7th/nvim-cmp)
 ### debugging
