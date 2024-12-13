@@ -54,4 +54,69 @@ return {
       }
     end,
   },
+  -- сохраняет версии файлов
+  {
+    'mbbill/undotree',
+    vim.keymap.set('n', '<C-U>', vim.cmd.UndotreeToggle, { noremap = true, silent = true }),
+  },
+  {
+    'github/copilot.vim',
+  },
+  -- автозакрывание тега
+  {
+    'windwp/nvim-ts-autotag',
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end,
+  },
+  -- множетсво терминалов
+  {
+    'akinsho/nvim-toggleterm.lua',
+    config = function()
+      require('toggleterm').setup {
+        size = 15,
+        open_mapping = [[<C-\>]],
+        hide_numbers = false,
+        start_in_insert = true,
+        persist_size = true,
+        direction = 'horizontal',
+        close_on_exit = true,
+        shell = 'zsh',
+      }
+    end,
+  },
+  -- множетсвенный курсор
+  {
+    'mg979/vim-visual-multi',
+    config = function()
+      vim.g.VM_maps = 0
+    end,
+  },
+  -- popups
+  {
+    'voldikss/vim-floaterm',
+  },
+  {
+    'nvim-lua/plenary.nvim',
+  },
+  -- git
+  {
+    'kdheepak/lazygit.nvim',
+    lazy = false,
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('telescope').load_extension 'lazygit'
+    end,
+  },
 }

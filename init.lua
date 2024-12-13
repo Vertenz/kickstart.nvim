@@ -939,6 +939,7 @@ require('lazy').setup({
       'hrsh7th/cmp-path',
       'wkillerud/some-sass',
       'hrsh7th/cmp-nvim-lsp-signature-help',
+      'wkillerud/some-sass',
     },
     config = function()
       -- See `:help cmp`
@@ -1018,6 +1019,7 @@ require('lazy').setup({
           { name = 'path' },
           { name = 'buffer' },
           { name = 'nvim_lsp_signature_help' },
+          { name = 'buffer' },
         },
 
         require('luasnip.loaders.from_vscode').lazy_load { paths = { '~/.config/nvim/snippets' } },
