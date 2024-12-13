@@ -97,4 +97,31 @@ return {
       vim.g.VM_maps = 0
     end,
   },
+  -- popups
+  {
+    'voldikss/vim-floaterm',
+  },
+  {
+    'nvim-lua/plenary.nvim',
+  },
+  -- git
+  {
+    'kdheepak/lazygit.nvim',
+    lazy = false,
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('telescope').load_extension 'lazygit'
+    end,
+  },
 }

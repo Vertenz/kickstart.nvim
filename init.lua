@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -116,6 +115,16 @@ vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
   end,
 })
 
+-- autosave
+vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'TabLeave' }, {
+  pattern = '*',
+  callback = function()
+    if vim.bo.modified then
+      vim.cmd 'silent! write'
+    end
+  end,
+})
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -186,6 +195,57 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- Show full virtual text
+local function show_virtual_text()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local cursor = vim.api.nvim_win_get_cursor(0) -- Получаем текущую строку и колонку
+  local line = cursor[1] - 1 -- Строки в Lua индексируются с 0
+
+  -- Получаем список всех namespaces
+  local namespaces = vim.api.nvim_get_namespaces()
+
+  -- Переменная для хранения найденных сообщений
+  local messages = {}
+
+  -- Проверяем виртуальный текст для всех namespaces
+  for _, ns_id in pairs(namespaces) do
+    local extmarks = vim.api.nvim_buf_get_extmarks(bufnr, ns_id, { line, 0 }, { line, -1 }, { details = true })
+
+    for _, extmark in ipairs(extmarks) do
+      local details = extmark[4]
+      if details.virt_text then
+        for _, chunk in ipairs(details.virt_text) do
+          table.insert(messages, chunk[1]) -- Добавляем текст
+        end
+      end
+    end
+  end
+
+  if #messages == 0 then
+    print 'No virtual text on this line'
+    return
+  end
+
+  -- Объединяем все сообщения
+  local full_message = table.concat(messages, '\n')
+
+  -- Создаём всплывающее окно
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(full_message, '\n'))
+
+  vim.api.nvim_open_win(buf, true, {
+    relative = 'cursor',
+    row = 1,
+    col = 0,
+    width = math.min(80, #full_message), -- Ограничение ширины
+    height = #messages,
+    style = 'minimal',
+    border = 'rounded',
+  })
+end
+
+-- Привязываем к горячей клавише
+vim.keymap.set('n', '<leader>vt', show_virtual_text, { desc = 'Show virtual text under cursor' })
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -288,6 +348,14 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      current_line_blame = true, -- Включает постоянное отображение blame для текущей строки
+      current_line_blame_opts = {
+        virt_text = true, -- Использует виртуальный текст
+        virt_text_pos = 'eol', -- Отображает текст в конце строки
+        delay = 100, -- Задержка перед отображением blame (в миллисекундах)
+        ignore_whitespace = false, -- Не игнорирует изменения только пробелов
+      },
+      current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
     },
   },
 
@@ -695,10 +763,10 @@ require('lazy').setup({
             -- Упорядочить импорты
             vim.keymap.set('n', '<leader>oi', vim.lsp.buf.code_action, bufopts)
 
-            -- Автодобавление недостающих импортов
+            -- Автоисправление
             vim.keymap.set('n', '<leader>ai', function()
               vim.lsp.buf.execute_command {
-                command = '_typescript.addMissingImports',
+                command = 'volar.action.fixAll',
                 arguments = { vim.api.nvim_buf_get_name(0) },
               }
             end, bufopts)
@@ -708,6 +776,10 @@ require('lazy').setup({
               vim.lsp.buf.rename()
             end, bufopts)
           end,
+        },
+
+        somesass_ls = {
+          filetypes = { 'scss', 'sass', 'vue' },
         },
 
         lua_ls = {
@@ -743,6 +815,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'volar', -- userd volar for vue
+        'somesass_ls', -- sass lsp
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -792,6 +865,10 @@ require('lazy').setup({
             lsp_format = 'fallback',
           }
         end
+        return {
+          timeout_ms = 1500,
+          lsp_format = lsp_format_opt,
+        }
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
@@ -799,19 +876,18 @@ require('lazy').setup({
         python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'eslint_d', 'prettier' },
+        javascript = { 'eslint_d' },
         vue = { 'eslint_d', 'stylelint' },
-        typescript = { 'eslint_d', 'prettier' },
+        typescript = { 'eslint_d' },
         json = { 'prettier' },
         html = { 'prettier' },
         css = { 'stylelint' },
-        scss = { 'stylelint' },
+        scss = { 'eslint_d', 'stylelint' },
         less = { 'stylelint' },
         postcss = { 'stylelint' },
       },
     },
   },
-
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
@@ -835,7 +911,10 @@ require('lazy').setup({
           {
             'rafamadriz/friendly-snippets',
             config = function()
-              require('luasnip.loaders.from_vscode').lazy_load()
+              require('luasnip.loaders.from_vscode').lazy_load {
+                exclude = { 'javascript', 'typescript', 'vue', 'html', 'css', 'scss' },
+              }
+              -- require('luasnip.loaders.from_vscode').lazy_load { paths = { vim.fn.stdpath 'config' .. '/snippets' } }
             end,
           },
         },
@@ -848,12 +927,14 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp-signature-help',
+      'wkillerud/some-sass',
     },
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
+      require('luasnip.loaders.from_vscode').lazy_load()
 
       cmp.setup {
         snippet = {
@@ -925,7 +1006,10 @@ require('lazy').setup({
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'nvim_lsp_signature_help' },
+          { name = 'buffer' },
         },
+
+        require('luasnip.loaders.from_vscode').lazy_load { paths = { '~/.config/nvim/snippets' } },
       }
     end,
   },
@@ -1035,7 +1119,7 @@ require('lazy').setup({
   require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
