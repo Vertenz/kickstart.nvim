@@ -185,6 +185,7 @@ vim.opt.confirm = true
 -- slellcheck
 vim.opt.spell = true
 vim.opt.spelllang = { 'en', 'en_us', 'ru', 'ru_ru' }
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -779,7 +780,7 @@ require('lazy').setup({
         },
 
         somesass_ls = {
-          filetypes = { 'scss', 'sass', 'vue' },
+          filetypes = { 'scss', 'sass', 'css', 'vue' },
         },
 
         lua_ls = {
@@ -972,7 +973,7 @@ require('lazy').setup({
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<A-Space>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
