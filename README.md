@@ -8,18 +8,46 @@
 ## Install Instructions
 
  > Install requires Neovim 0.9+. Always review the code before installing a configuration.
+ > use nvim_install.sh or
 
 Clone the repository and install the plugins:
+External Requirements:
+
+    Basic utils: git, make, unzip, C Compiler (gcc)
+    ripgrep
+    Clipboard tool (xclip/xsel/win32yank or other depending on the platform)
+    A Nerd Font: optional, provides various icons
+        if you have it set vim.g.have_nerd_font in init.lua to true
+    Language Setup:
+        If you want to write Typescript, you need npm
+        If you want to write Golang, you will need go
+        etc.
+
+
+#### Clone
+<details><summary> Linux and Mac </summary>
 
 ```sh
-git clone git@github.com:Vertenz/kickstart.nvim ~/.config/Vertenz/kickstart.nvim
+git clone https://github.com/Vertenz/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
-Open Neovim with this config:
+</details>
 
-```sh
-NVIM_APPNAME=Vertenz/kickstart.nvim/ nvim
+<details><summary> Windows </summary>
+
+If you're using `cmd.exe`:
+
 ```
+git clone https://github.com/Vertenz/kickstart.nvim.git "%localappdata%\nvim"
+```
+
+If you're using `powershell.exe`
+
+```
+git clone https://github.com/Vertenz/kickstart.nvim.git "${env:LOCALAPPDATA}\nvim"
+```
+
+</details>
 
 ## Plugins
 
