@@ -183,8 +183,10 @@ vim.opt.scrolloff = 10
 vim.opt.confirm = true
 
 -- slellcheck
-vim.opt.spell = true
+vim.opt.spell = false
 vim.opt.spelllang = { 'en', 'en_us', 'ru', 'ru_ru' }
+
+vim.g.coc_global_extensions = { 'coc-spell-checker' }
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`

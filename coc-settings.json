@@ -1,0 +1,73 @@
+{
+  //-------- CoC Spell Checker Configuration --------
+  "coc.preferences.diagnostic.displayByAle": true,
+  "coc.source.spell.checkComments": true,
+  "coc.source.spell.checkStrings": true,
+  "coc.source.spell.checkIdentifiers": true,
+  "coc.source.spell.language": "en,ru",
+  "coc.source.spell.suggestThreshold": 5,
+
+  //-------- Code Spell Checker Configuration --------
+  // The Language local to use when spell checking. "en" and "en-GB" are currently supported.
+  "cSpellExt.enableDictionaries": ["russiian"],
+  "cSpell.language": "en,ru",
+
+  // Controls the maximum number of spelling errors per document.
+  "cSpell.maxNumberOfProblems": 100,
+
+  // Controls the number of suggestions shown.
+  "cSpell.numSuggestions": 8,
+
+  // The minimum length of a word before checking it against a dictionary.
+  "cSpell.minWordLength": 4,
+
+  // Specify file types to spell check.
+  "cSpell.enabledLanguageIds": [
+    "javascript",
+    "javascriptreact",
+    "javascriptvue",
+    "vue",
+    "markdown",
+    "typescript",
+    "typescriptreact",
+    "typescriptvue",
+    "yml"
+  ],
+
+  // Enable / Disable the spell checker.
+  "cSpell.enabled": true,
+
+  // Display the spell checker status on the status bar.
+  "cSpell.showStatus": true,
+
+  // Words to add to dictionary for a workspace.
+  "cSpell.words": [],
+
+  // Enable / Disable compound words like 'errormessage'
+  "cSpell.allowCompoundWords": false,
+
+  // Words to be ignored and not suggested.
+  "cSpell.ignoreWords": ["behaviour"],
+
+  // User words to add to dictionary. Should only be in the user settings.
+  "cSpell.userWords": [],
+
+  // Specify paths/files to ignore.
+  "cSpell.ignorePaths": [
+    "node_modules",        
+    "**/node_modules",     
+    "**/node_modules/**",  
+    "node_modules/**",     
+    "vscode-extension",    
+    ".git",                
+    "*.dll",               
+    "**/*.dll",             
+    "dist/*"
+  ],
+
+  // flagWords - list of words to be always considered incorrect
+  "cSpell.flagWords": ["hte"],
+
+  // Set the delay before spell checking the document. Default is 50.
+  "cSpell.spellCheckDelayMs": 50
+}
