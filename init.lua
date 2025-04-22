@@ -585,6 +585,12 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
+
+      'microsoft/vscode-eslint',
+      'wkillerud/some-sass',
+      'bmatcuk/stylelint-lsp',
+      'JohnnyMorganz/StyLua',
+      'vuejs/language-tools',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -767,10 +773,21 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+          },
+
+          single_file_support = true,
+        },
         --
         volar = {
-          filetypes = { 'typescript', 'javascript', 'vue', 'json', 'js' }, -- Включаем файлы .vue, .ts, .js
+          filetypes = { 'vue' }, -- Включаем файлы .vue
           init_options = {
             vue = {
               hybridMode = false,
@@ -799,7 +816,7 @@ require('lazy').setup({
         },
 
         somesass_ls = {
-          filetypes = { 'scss', 'sass', 'css', 'vue' },
+          filetypes = { 'scss', 'sass', 'css', 'vue', 'tsx', 'jsx' },
         },
 
         lua_ls = {
@@ -836,6 +853,8 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'volar', -- userd volar for vue
         'somesass_ls', -- sass lsp
+        'eslint_d', -- eslint lsp
+        'typescript-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -894,6 +913,9 @@ require('lazy').setup({
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'eslint_d' },
         vue = { 'eslint_d', 'stylelint' },
+        react = { 'eslint_d', 'stylelint' },
+        typescriptreact = { 'eslint_d', 'stylelint' },
+        javascriptreact = { 'eslint_d', 'stylelint' },
         typescript = { 'eslint_d' },
         json = { 'prettier' },
         html = { 'prettier' },
@@ -1118,6 +1140,7 @@ require('lazy').setup({
         'vue',
         'javascript',
         'typescript',
+        'tsx',
         'scss',
       },
       -- Autoinstall languages that are not installed
