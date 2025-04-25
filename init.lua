@@ -193,12 +193,6 @@ vim.g.coc_global_extensions = { 'coc-spell-checker' }
 -- See `:help 'confirm'`
 vim.opt.confirm = true
 
--- slellcheck
-vim.opt.spell = false
-vim.opt.spelllang = { 'en', 'en_us', 'ru', 'ru_ru' }
-
-vim.g.coc_global_extensions = { 'coc-spell-checker' }
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -440,6 +434,10 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+
+        -- copilot
+        { '<leader>a', group = 'ai' },
+        { '<leader>gm', group = 'Copilot Chat' },
       },
     },
   },
@@ -1047,6 +1045,7 @@ require('lazy').setup({
           { name = 'buffer' },
           { name = 'nvim_lsp_signature_help' },
           { name = 'buffer' },
+          { name = 'render-markdown' },
         },
 
         require('luasnip.loaders.from_vscode').lazy_load { paths = { '~/.config/nvim/snippets' } },

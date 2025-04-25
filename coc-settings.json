@@ -9,8 +9,8 @@
 
   //-------- Code Spell Checker Configuration --------
   // The Language local to use when spell checking. "en" and "en-GB" are currently supported.
-  "cSpellExt.enableDictionaries": ["russiian"],
-  "cSpell.language": "en,ru",
+  "cSpellExt.enableDictionaries": ["russian"],
+  "cSpell.language": "en-GB,en,ru",
 
   // Controls the maximum number of spelling errors per document.
   "cSpell.maxNumberOfProblems": 100,
@@ -31,7 +31,8 @@
     "typescript",
     "typescriptreact",
     "typescriptvue",
-    "yml"
+    "yml",
+    "json"
   ],
 
   // Enable / Disable the spell checker.
