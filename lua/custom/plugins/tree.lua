@@ -12,6 +12,9 @@ return {
         renderer = {
           highlight_opened_files = 'all',
         },
+        filters = {
+          dotfiles = false,
+        },
       }
     end,
     vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file tree' }),
