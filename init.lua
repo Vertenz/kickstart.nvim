@@ -577,8 +577,8 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'williamboman/mason.nvim', opts = {} },
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', opts = {} },
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -778,13 +778,13 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {
-          capabilities = {
-            textDocument = {
-              positionEncoding = { 'utf-8' }, -- Or 'utf-16'/'utf-32' as necessary
-            },
-          },
-        },
+        -- clangd = {
+        --   capabilities = {
+        --     textDocument = {
+        --       positionEncoding = { 'utf-8' }, -- Or 'utf-16'/'utf-32' as necessary
+        --     },
+        --   },
+        -- },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -814,7 +814,10 @@ require('lazy').setup({
               hybridMode = false,
             },
           },
-          root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
+          root_dir = function(fname)
+            local root_pattern = require('lspconfig').util.root_pattern('package.json', '.git')(fname)
+            return root_pattern or vim.loop.cwd()
+          end,
           capabilities = capabilities,
           on_attach = vim.lsp.on_attach,
         },
@@ -858,6 +861,7 @@ require('lazy').setup({
         'volar', -- userd volar for vue
         'somesass_ls', -- sass lsp
         'eslint_d', -- eslint lsp
+        'ts_ls', -- typescript
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
