@@ -8,7 +8,6 @@ Kickstart Guide:
       - :
       - Tutor
       - <enter key>
-
   Next, run AND READ `:help`.
     This will open up a help window with some basic information
     about reading, navigating and searching the builtin help documentation.
@@ -108,7 +107,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 350
 
 -- Decrease mapped sequence wait time
 vim.opt.timeoutlen = 300
@@ -141,7 +140,6 @@ vim.opt.confirm = true
 vim.opt.spell = false
 vim.opt.spelllang = { 'en', 'en_us', 'ru', 'ru_ru' }
 
-vim.g.coc_global_extensions = { 'coc-spell-checker' }
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
@@ -170,17 +168,13 @@ local function show_virtual_text()
 
   -- Collect extmarks with virt_text only (0.10+ feature)
   for _, ns_id in pairs(namespaces) do
-    local extmarks = api.nvim_buf_get_extmarks(
-      bufnr, ns_id,
-      { line, 0 }, { line, -1 },
-      { details = true }
-    )
+    local extmarks = api.nvim_buf_get_extmarks(bufnr, ns_id, { line, 0 }, { line, -1 }, { details = true })
     for _, extmark in ipairs(extmarks) do
       local details = extmark[4]
       if details.virt_text then
         for _, chunk in ipairs(details.virt_text) do
           local text = vim.trim(chunk[1])
-          if text ~= "" then
+          if text ~= '' then
             messages[#messages + 1] = text
           end
         end
@@ -190,7 +184,7 @@ local function show_virtual_text()
         for _, vline in ipairs(details.virt_lines) do
           for _, chunk in ipairs(vline) do
             local vtext = vim.trim(chunk[1])
-            if vtext ~= "" then
+            if vtext ~= '' then
               messages[#messages + 1] = vtext
             end
           end
@@ -202,7 +196,7 @@ local function show_virtual_text()
   -- Remove duplicates and empty lines
   local seen, lines = {}, {}
   for _, msg in ipairs(messages) do
-    if msg ~= "" and not seen[msg] then
+    if msg ~= '' and not seen[msg] then
       table.insert(lines, msg)
       seen[msg] = true
     end
@@ -238,7 +232,11 @@ local function show_virtual_text()
   -- Optional: close on keypress or mouse
   api.nvim_create_autocmd('BufLeave', {
     buffer = float_buf,
-    callback = function() if api.nvim_win_is_valid(win) then api.nvim_win_close(win, true) end end,
+    callback = function()
+      if api.nvim_win_is_valid(win) then
+        api.nvim_win_close(win, true)
+      end
+    end,
   })
   -- Close popup on Escape
   api.nvim_buf_set_keymap(float_buf, 'n', '<Esc>', '<cmd>bd!<CR>', { nowait = true, noremap = true, silent = true })
@@ -300,6 +298,17 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- vim.api.nvim_create_autocmd('BufEnter', {
+--   callback = function()
+--     local lsp_util = require('lspconfig.util')
+--     local root = lsp_util.root_pattern('.git', 'package.json', '.editorconfig')(vim.fn.getcwd())
+--     if root then
+--       vim.fn.chdir(root) -- Меняет текущую директорию на корень проекта
+--     end
+--   end,
+-- })
+-- vim.opt.path:append('**')
+-- vim.opt.include = '@'
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -347,11 +356,11 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
-      current_line_blame = true,   -- Включает постоянное отображение blame для текущей строки
+      current_line_blame = true, -- Включает постоянное отображение blame для текущей строки
       current_line_blame_opts = {
-        virt_text = true,          -- Использует виртуальный текст
-        virt_text_pos = 'eol',     -- Отображает текст в конце строки
-        delay = 350,               -- Задержка перед отображением blame (в миллисекундах)
+        virt_text = true, -- Использует виртуальный текст
+        virt_text_pos = 'eol', -- Отображает текст в конце строки
+        delay = 350, -- Задержка перед отображением blame (в миллисекундах)
         ignore_whitespace = false, -- Не игнорирует изменения только пробелов
       },
       current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
@@ -372,7 +381,7 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -418,16 +427,16 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c',  group = '[C]ode',      mode = { 'n', 'x' } },
-        { '<leader>d',  group = '[D]ocument' },
-        { '<leader>r',  group = '[R]ename' },
-        { '<leader>s',  group = '[S]earch' },
-        { '<leader>w',  group = '[W]orkspace' },
-        { '<leader>t',  group = '[T]oggle' },
-        { '<leader>h',  group = 'Git [H]unk',  mode = { 'n', 'v' } },
+        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
 
         -- copilot
-        { '<leader>a',  group = 'ai' },
+        { '<leader>a', group = 'ai' },
         { '<leader>gm', group = 'Copilot Chat' },
       },
     },
@@ -461,7 +470,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -573,7 +582,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
       'saghen/blink.cmp',
@@ -799,32 +808,15 @@ require('lazy').setup({
         },
         --
         volar = {
-          filetypes = { 'vue' }, -- Включаем файлы .vue
+          filetypes = { 'vue' },
           init_options = {
             vue = {
               hybridMode = false,
             },
           },
+          root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
           capabilities = capabilities,
-          on_attach = function(client, bufnr)
-            local bufopts = { noremap = true, silent = true, buffer = bufnr }
-
-            -- Упорядочить импорты
-            vim.keymap.set('n', '<leader>oi', vim.lsp.buf.code_action, bufopts)
-
-            -- Автоисправление
-            vim.keymap.set('n', '<leader>ai', function()
-              vim.lsp.buf.execute_command {
-                command = 'volar.action.fixAll',
-                arguments = { vim.api.nvim_buf_get_name(0) },
-              }
-            end, bufopts)
-
-            -- Переименование с обновлением путей
-            vim.keymap.set('n', '<leader>ru', function()
-              vim.lsp.buf.rename()
-            end, bufopts)
-          end,
+          on_attach = vim.lsp.on_attach,
         },
 
         somesass_ls = {
@@ -862,11 +854,10 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua',      -- Used to format Lua code
-        'volar',       -- userd volar for vue
+        'stylua', -- Used to format Lua code
+        'volar', -- userd volar for vue
         'somesass_ls', -- sass lsp
-        'eslint_d',    -- eslint lsp
-        'typescript-language-server',
+        'eslint_d', -- eslint lsp
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -967,7 +958,7 @@ require('lazy').setup({
               require('luasnip.loaders.from_vscode').lazy_load {
                 exclude = { 'javascript', 'typescript', 'vue', 'html', 'css', 'scss', 'javascriptreact' },
               }
-              -- require('luasnip.loaders.from_vscode').lazy_load { paths = { vim.fn.stdpath 'config' .. '/snippets' } }
+              require('luasnip.loaders.from_vscode').lazy_load { paths = { vim.fn.stdpath 'config' .. '/snippets' } }
             end,
           },
         },
